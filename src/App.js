@@ -4,99 +4,110 @@ import React from 'react';
 // import $ from 'jquery';
 
 class App extends React.Component {
-	productsArray = [
-		{
-			id: 1,
-			productCategory: 'Books',
-			productTitle: 'Plain Notebook',
-			price: 109.0,
-			topProducts: false,
-			sale: true,
-			uploadedImageSrc: 'https://source.unsplash.com/400x300/?notebook',
-		},
-		{
-			id: 2,
-			productCategory: 'Bags',
-			productTitle: 'Casual HandBag',
-			price: 49.0,
-			topProducts: false,
-			sale: false,
-			uploadedImageSrc: 'https://source.unsplash.com/400x300/?handbag',
-		},
-		{
-			id: 3,
-			productCategory: 'Books',
-			productTitle: 'e-Book Reader',
-			price: 199.0,
-			topProducts: false,
-			sale: true,
-			uploadedImageSrc: 'https://source.unsplash.com/400x300/?e-book',
-		},
-		{
-			id: 4,
-			productCategory: 'Books',
-			productTitle: 'Hard CoverBook',
-			price: 59.0,
-			topProducts: false,
-			sale: false,
-			uploadedImageSrc: 'https://source.unsplash.com/400x300/?Book',
-		},
-		{
-			id: 5,
-			productCategory: 'Misc',
-			productTitle: 'Mug Mockup',
-			price: 99.0,
-			topProducts: false,
-			sale: false,
-			uploadedImageSrc: 'https://source.unsplash.com/400x300/?Mug',
-		},
-		{
-			id: 6,
-			productCategory: 'Hoodie/T-shirt',
-			productTitle: 'Hoodie Red',
-			price: 599.0,
-			topProducts: false,
-			sale: true,
-			uploadedImageSrc: 'https://source.unsplash.com/400x300/?Hoodie',
-		},
-		{
-			id: 7,
-			productCategory: 'Misc',
-			productTitle: 'Poster Mockup',
-			price: 89.0,
-			topProducts: false,
-			sale: false,
-			uploadedImageSrc: 'https://source.unsplash.com/400x300/?Poster',
-		},
-		{
-			id: 8,
-			productCategory: 'Misc',
-			productTitle: 'Poster Mockup',
-			price: 19.0,
-			topProducts: false,
-			sale: false,
-			uploadedImageSrc: 'https://source.unsplash.com/400x300/?Poster',
-		},
-		{
-			id: 9,
-			productCategory: 'Misc',
-			productTitle: 'Poster Mockup',
-			price: 20.0,
-			topProducts: false,
-			sale: false,
-			uploadedImageSrc: 'https://source.unsplash.com/400x300/?Poster',
-		},
-	];
-	// filteredArray = this.productsArray;
 	constructor(props) {
 		super(props);
 		// initial state
 		this.state = {
-			products: this.productsArray,
+			products: [
+				{
+					id: 1,
+					productCategory: 'Books',
+					productTitle: 'Plain Notebook',
+					price: 109.0,
+					topProducts: false,
+					sale: true,
+					uploadedImageSrc: 'https://source.unsplash.com/400x300/?notebook',
+				},
+				{
+					id: 2,
+					productCategory: 'Bags',
+					productTitle: 'Casual HandBag',
+					price: 49.0,
+					topProducts: false,
+					sale: false,
+					uploadedImageSrc: 'https://source.unsplash.com/400x300/?handbag',
+				},
+				{
+					id: 3,
+					productCategory: 'Books',
+					productTitle: 'e-Book Reader',
+					price: 199.0,
+					topProducts: false,
+					sale: true,
+					uploadedImageSrc: 'https://source.unsplash.com/400x300/?e-book',
+				},
+				{
+					id: 4,
+					productCategory: 'Books',
+					productTitle: 'Hard CoverBook',
+					price: 59.0,
+					topProducts: false,
+					sale: false,
+					uploadedImageSrc: 'https://source.unsplash.com/400x300/?Book',
+				},
+				{
+					id: 5,
+					productCategory: 'Misc',
+					productTitle: 'Mug Mockup',
+					price: 99.0,
+					topProducts: false,
+					sale: false,
+					uploadedImageSrc: 'https://source.unsplash.com/400x300/?Mug',
+				},
+				{
+					id: 6,
+					productCategory: 'Hoodie/T-shirt',
+					productTitle: 'Hoodie Red',
+					price: 599.0,
+					topProducts: false,
+					sale: true,
+					uploadedImageSrc: 'https://source.unsplash.com/400x300/?Hoodie',
+				},
+				{
+					id: 7,
+					productCategory: 'Misc',
+					productTitle: 'Poster Mockup',
+					price: 89.0,
+					topProducts: false,
+					sale: false,
+					uploadedImageSrc: 'https://source.unsplash.com/400x300/?Poster',
+				},
+				{
+					id: 8,
+					productCategory: 'Misc',
+					productTitle: 'Poster Mockup',
+					price: 19.0,
+					topProducts: false,
+					sale: false,
+					uploadedImageSrc: 'https://source.unsplash.com/400x300/?Poster',
+				},
+				{
+					id: 9,
+					productCategory: 'Misc',
+					productTitle: 'Poster Mockup',
+					price: 20.0,
+					topProducts: false,
+					sale: false,
+					uploadedImageSrc: 'https://source.unsplash.com/400x300/?Poster',
+				},
+			],
+			topProduct: [
+				{
+					id: 0,
+					productCategory: 'Misc',
+					productTitle: 'Mug Mockup',
+					price: 99.0,
+					topProducts: true,
+					uploadedImageSrc: 'https://source.unsplash.com/70x70/?mug,mockup',
+				},
+			],
+			filtered: [],
+			onclick: this.addProduct,
+			isEdit: false,
 		};
 	}
 	componentDidMount() {
-		this.updateMaxPrice(this.productsArray);
+		this.updateMaxPrice(this.state.products);
 		window.addEventListener('click', function (event) {
 			var modal = document.getElementById('myModal');
 			if (event.target == modal) {
@@ -108,27 +119,31 @@ class App extends React.Component {
 				title.value = '';
 				price.value = '';
 			}
+			// if (this.state.isEdit) {
+			// 	this.setState({
+			// 		isEdit: !this.state.isEdit,
+			// 	});
+			// }
 		});
 	}
 
 	// add product open modal
-	addProductBtn() {
+	addProductBtn = () => {
+		console.log('hello', this.state.filtered.length);
+
 		var modal = document.getElementById('myModal');
 		var body = document.getElementsByTagName('body')[0];
-
 		var save = document.getElementById('save');
-		save.setAttribute('onclick', 'addProduct()');
-
 		var title = document.getElementById('title');
 		var price = document.getElementById('price');
 		title.value = '';
 		price.value = '';
 		modal.style.display = 'block';
 		body.style.overflow = 'hidden';
-	}
+	};
 
 	// close modal
-	closeModal() {
+	closeModal = () => {
 		var modal = document.getElementById('myModal');
 		var body = document.getElementsByTagName('body')[0];
 		var title = document.getElementById('title');
@@ -137,20 +152,236 @@ class App extends React.Component {
 		body.style.overflow = 'auto';
 		title.value = '';
 		price.value = '';
-	}
+		this.setState({
+			isEdit: false,
+		});
+	};
+
+	// -------------------------- PRODUCT CARD CLICKED ----------------------------
+
+	// when product is clicked
+	// showing default values for the product modal
+	productClicked = (element) => {
+		// var idarray = [];
+		console.log(element.target.dataset.value);
+		var modal = document.getElementById('myModal');
+		var save = document.getElementById('save');
+		var modalProductCategory = document.querySelectorAll(
+			'.product-category select option'
+		);
+		var modalProductTitle = document.querySelector('#title');
+		var modalProductPrice = document.querySelector('#price');
+		var topProduct = document.getElementById('topProduct');
+		var uploadFile = document.querySelector('input[type="file"]').files[0];
+		var uploadFileValue = document.querySelector('input[type="file"]');
+		var clikedProductId = parseInt(element.target.dataset.value);
+		// changing the onclick function
+
+		this.setState(
+			{
+				isEdit: true,
+			},
+			() => {
+				modal.setAttribute('data-value', clikedProductId);
+
+				// showing the modal
+				var body = document.getElementsByTagName('body')[0];
+				modal.style.display = 'block';
+				body.style.overflow = 'hidden';
+
+				// remove selected attribute in all options
+				modalProductCategory.forEach((option) => {
+					option.removeAttribute('selected', '');
+				});
+
+				// setting default values for the product that is clicked
+				this.state.products.forEach((obj) => {
+					if (obj.id == clikedProductId) {
+						modalProductCategory.forEach((option) => {
+							if (option.value === obj.productCategory) {
+								console.log(option);
+								option.setAttribute('selected', '');
+							}
+						});
+						modalProductTitle.value = obj.productTitle;
+						modalProductPrice.value = obj.price;
+						topProduct.checked = obj.topProducts;
+						uploadFileValue.value = '';
+					}
+				});
+			}
+		);
+	};
+
+	// save button when editting a product details
+	editProduct = () => {
+		console.log('state', this.state);
+
+		var e = document.getElementById('selectedCategory');
+		var title = document.getElementById('title').value;
+		var price = document.getElementById('price').value;
+		var topProduct = document.getElementById('topProduct');
+		var uploadFile = document.querySelector('input[type="file"]').files[0];
+
+		if (!title || !price) {
+			if (!title) {
+				document.getElementById('error-msg-title').innerHTML =
+					'Please Enter the Title';
+			} else {
+				document.getElementById('error-msg-title').innerHTML = '';
+			}
+			if (!price) {
+				document.getElementById('error-msg-price').innerHTML =
+					'Please Enter the Price';
+			} else {
+				document.getElementById('error-msg-price').innerHTML = '';
+			}
+		} else {
+			var modal = document.getElementById('myModal');
+			var body = document.getElementsByTagName('body')[0];
+			modal.style.display = 'none';
+			body.style.overflow = 'auto';
+			console.log(modal.dataset.value);
+			var currentSelectedId = modal.dataset.value;
+			this.state.products.forEach((obj) => {
+				if (obj.id == currentSelectedId) {
+					var category = e.options[e.selectedIndex].text;
+					obj.productCategory = category;
+					obj.productTitle = title;
+					obj.price = parseInt(price);
+					obj.topProducts = topProduct.checked;
+					if (uploadFile) {
+						var image = URL.createObjectURL(uploadFile);
+						obj.uploadedImageSrc = image;
+					}
+					this.setState(
+						{
+							products: this.state.products,
+						},
+						() => {
+							if (obj.topProducts == true) {
+								const result = this.state.topProduct.filter(
+									(topobj) => topobj == obj
+								);
+								console.log('result', result);
+								if (result.length == 0) {
+									this.state.topProduct.push(obj);
+								}
+								console.log(this.state.topProduct);
+								this.setState({
+									topProduct: this.state.topProduct,
+								});
+							} else {
+								this.state.topProduct.forEach((topObj) => {
+									console.log(topObj);
+									if (topObj == obj) {
+										var index = this.state.topProduct.indexOf(obj);
+										console.log(index);
+										this.state.topProduct.splice(index, 1);
+									}
+								});
+								this.setState({
+									topProduct: this.state.topProduct,
+								});
+							}
+						}
+					);
+				}
+			});
+		}
+	};
+
+	// -------------------------- SAVE: ADD PRODUCT BUTTON ----------------------------
+
+	// save button for add product button
+	//adding product to the product list (when Save button is clicked)
+	addProduct = () => {
+		var obj = {};
+		obj['id'] = this.state.products.length + 1;
+		var e = document.getElementById('selectedCategory');
+		var category = e.options[e.selectedIndex].text;
+		obj['productCategory'] = category;
+		var title = document.getElementById('title').value;
+		obj['productTitle'] = title;
+		var price = document.getElementById('price').value;
+		obj['price'] = parseInt(price);
+		var topProduct = document.getElementById('topProduct').checked;
+		obj['topProducts'] = topProduct;
+		var uploadFile = document.querySelector('input[type="file"]').files[0];
+
+		if (!title || !price || uploadFile == undefined) {
+			if (!title) {
+				document.getElementById('error-msg-title').innerHTML =
+					'Please Enter the Title';
+			} else {
+				document.getElementById('error-msg-title').innerHTML = '';
+			}
+			if (!price) {
+				document.getElementById('error-msg-price').innerHTML =
+					'Please Enter the Price';
+			} else {
+				document.getElementById('error-msg-price').innerHTML = '';
+			}
+			if (uploadFile == undefined) {
+				document.getElementById('error-msg-file').innerHTML =
+					'Please Upload the file';
+			} else {
+				document.getElementById('error-msg-file').innerHTML = '';
+			}
+		} else {
+			var image = URL.createObjectURL(uploadFile);
+			obj['uploadedImageSrc'] = image;
+
+			// hide modal after save
+			var modal = document.getElementById('myModal');
+			var body = document.getElementsByTagName('body')[0];
+			modal.style.display = 'none';
+			body.style.overflow = 'auto';
+
+			if (topProduct === true) {
+				this.state.topProduct.push(obj);
+				this.state.products.push(obj);
+				this.setState(
+					{
+						products: this.state.products,
+						topProduct: this.state.topProduct,
+					},
+					() => {
+						this.updateMaxPrice(this.state.products);
+					}
+				);
+			} else {
+				this.state.products.push(obj);
+				this.setState(
+					{
+						products: this.state.products,
+					},
+					() => {
+						this.updateMaxPrice(this.state.products);
+					}
+				);
+			}
+		}
+	};
+
 	// filter by category
 	filterByCategory = (el) => {
 		var filteredArray = [];
 		var selectedCategoryName = el.target.innerHTML;
-		this.productsArray.map((e) => {
+		this.state.products.map((e) => {
 			if (e.productCategory === selectedCategoryName) {
 				filteredArray.push(e);
 			}
 		});
-		this.setState({
-			products: filteredArray,
-		});
-		this.updateMaxPrice(filteredArray);
+		this.setState(
+			{
+				filtered: filteredArray,
+			},
+			() => {
+				this.updateMaxPrice(filteredArray);
+			}
+		);
+		// this.updateMaxPrice(filteredArray);
 	};
 
 	// update max price
@@ -167,22 +398,29 @@ class App extends React.Component {
 		priceRange.innerHTML = maxx;
 		slider.max = maxx;
 	};
+
 	// range slider
 	rangeSlider = (e) => {
-		// console.log(filteredArray);
 		// update max value of slider
 		var priceRange = document.querySelector('.price-range b span');
 		priceRange.innerHTML = e.target.value;
 		var filterPrice = [];
-		console.log(this.state.products);
+		// console.log(this.state.products);
 		this.state.products.forEach((arr) => {
 			if (arr.price <= e.target.value) {
 				filterPrice.push(arr);
 			}
 		});
-		this.filteredArray = filterPrice;
+		// console.log(filterPrice.length);
+		// if (filterPrice.length == 0) {
+		// 	// remove all product cards
+		// 	var productcard = document.querySelectorAll('.product-card');
+		// 	productcard.forEach((element) => {
+		// 		element.style.display = 'none';
+		// 	});
+		// }
 		this.setState({
-			products: filterPrice,
+			filtered: filterPrice,
 		});
 	};
 
@@ -201,32 +439,60 @@ class App extends React.Component {
 	};
 	// -------------------------- PRICE: DEFAULT SORTING ----------------------------
 	defaultSorting() {
-		const defaultSort = this.state.products.sort(function (a, b) {
-			return parseFloat(a.id) - parseFloat(b.id);
-		});
-		this.setState({
-			products: defaultSort,
-		});
+		if (this.state.filtered.length < 1) {
+			const defaultSort = this.state.products.sort(function (a, b) {
+				return parseFloat(a.id) - parseFloat(b.id);
+			});
+			this.setState({
+				filtered: defaultSort,
+			});
+		} else {
+			const defaultSort = this.state.filtered.sort(function (a, b) {
+				return parseFloat(a.id) - parseFloat(b.id);
+			});
+			this.setState({
+				filtered: defaultSort,
+			});
+		}
 	}
 	// -------------------------- PRICE LOW TO HIGH ----------------------------
 	priceLowToHigh = () => {
-		const lowToHigh = this.state.products.sort(function (a, b) {
-			return parseFloat(a.price) - parseFloat(b.price);
-		});
-		this.setState({
-			products: lowToHigh,
-		});
+		if (this.state.filtered.length < 1) {
+			const lowToHigh = this.state.products.sort(function (a, b) {
+				return parseFloat(a.price) - parseFloat(b.price);
+			});
+			this.setState({
+				filtered: lowToHigh,
+			});
+		} else {
+			const lowToHigh = this.state.filtered.sort(function (a, b) {
+				return parseFloat(a.price) - parseFloat(b.price);
+			});
+			this.setState({
+				filtered: lowToHigh,
+			});
+		}
 	};
 	// -------------------------- PRICE HIGH TO LOW ----------------------------
 	priceHighToLow() {
-		const highToLow = this.state.products.sort(function (a, b) {
-			return parseFloat(b.price) - parseFloat(a.price);
-		});
-		this.setState({
-			products: highToLow,
-		});
+		if (this.state.filtered.length < 1) {
+			const highToLow = this.state.products.sort(function (a, b) {
+				return parseFloat(b.price) - parseFloat(a.price);
+			});
+			this.setState({
+				filtered: highToLow,
+			});
+		} else {
+			const highToLow = this.state.filtered.sort(function (a, b) {
+				return parseFloat(b.price) - parseFloat(a.price);
+			});
+			this.setState({
+				filtered: highToLow,
+			});
+		}
 	}
 	render() {
+		console.log('state after render', this.state);
 		return (
 			<>
 				<header className="header">
@@ -322,7 +588,9 @@ class App extends React.Component {
 											CANCEL
 										</button>
 										<button
-											// onClick={addProduct}
+											onClick={
+												this.state.isEdit ? this.editProduct : this.addProduct
+											}
 											id="save"
 											className="save"
 										>
@@ -377,7 +645,32 @@ class App extends React.Component {
 							</div>
 							<div className="related-products">
 								<div className="sidebar-heading">Top Products</div>
-								<div className="mini-product-show-container"></div>
+								<div className="mini-product-show-container">
+									{this.state.topProduct.map((e) => {
+										return (
+											<div className="mini-product-show">
+												<img
+													style={{ width: '70px', height: '70px' }}
+													src={e.uploadedImageSrc}
+													alt=""
+												/>
+												<div class="product-content">
+													<span class="mini-product-heading">
+														{e.productTitle}
+													</span>
+													<div class="star">
+														<img src="./images/star.png" alt="" />
+														<img src="images/star.png" alt="" />
+														<img src="images/star.png" alt="" />
+														<img src="images/star.png" alt="" />
+														<img src="images/star.png" alt="" />
+													</div>
+													<div class="mini-price">${e.price}</div>
+												</div>
+											</div>
+										);
+									})}
+								</div>
 							</div>
 						</div>
 						<div className="main-product-listing">
@@ -394,27 +687,85 @@ class App extends React.Component {
 								</select>
 							</div>
 							<div className="product-listing">
-								{this.state.products.map((e) => {
-									return (
-										<div className="product-card" id="cardBtn">
-											<div class="product-image">
-												{e.sale === true ? (
-													<button class="product-sale">sale</button>
-												) : (
-													''
-												)}
-												<img src={e.uploadedImageSrc} alt="" />
-											</div>
-											<div class="product-details">
-												<span id="productId" style={{ display: 'none' }}>
-													{e.id}
-												</span>
-												<div class="product-name">{e.productTitle}</div>
-												<div class="product-price">${e.price}</div>
-											</div>
-										</div>
-									);
-								})}
+								{this.state.filtered.length > 0
+									? this.state.filtered.map((e) => {
+											return (
+												<div
+													className="product-card"
+													id="cardBtn"
+													data-value={e.id}
+													onClick={(e) => this.productClicked(e)}
+												>
+													<div className="product-image" data-value={e.id}>
+														{e.sale === true ? (
+															<button
+																className="product-sale"
+																data-value={e.id}
+															>
+																sale
+															</button>
+														) : (
+															''
+														)}
+														<img
+															src={e.uploadedImageSrc}
+															data-value={e.id}
+															alt=""
+														/>
+													</div>
+													<div class="product-details" data-value={e.id}>
+														<span id="productId" style={{ display: 'none' }}>
+															{e.id}
+														</span>
+														<div class="product-name" data-value={e.id}>
+															{e.productTitle}
+														</div>
+														<div class="product-price" data-value={e.id}>
+															${e.price}
+														</div>
+													</div>
+												</div>
+											);
+									  })
+									: this.state.products.map((e) => {
+											return (
+												<div
+													className="product-card"
+													id="cardBtn"
+													data-value={e.id}
+													onClick={(e) => this.productClicked(e)}
+												>
+													<div className="product-image" data-value={e.id}>
+														{e.sale === true ? (
+															<button
+																className="product-sale"
+																data-value={e.id}
+															>
+																sale
+															</button>
+														) : (
+															''
+														)}
+														<img
+															src={e.uploadedImageSrc}
+															data-value={e.id}
+															alt=""
+														/>
+													</div>
+													<div class="product-details" data-value={e.id}>
+														<span id="productId" style={{ display: 'none' }}>
+															{e.id}
+														</span>
+														<div class="product-name" data-value={e.id}>
+															{e.productTitle}
+														</div>
+														<div class="product-price" data-value={e.id}>
+															${e.price}
+														</div>
+													</div>
+												</div>
+											);
+									  })}
 							</div>
 							<div className="pagination"></div>
 						</div>
