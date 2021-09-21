@@ -102,6 +102,7 @@ class App extends React.Component {
 				},
 			],
 			filtered: [],
+			filterCategory: [],
 			onclick: this.addProduct,
 			isEdit: false,
 		};
@@ -259,6 +260,7 @@ class App extends React.Component {
 							products: this.state.products,
 						},
 						() => {
+							this.updateMaxPrice(this.state.products);
 							if (obj.topProducts == true) {
 								const result = this.state.topProduct.filter(
 									(topobj) => topobj == obj
@@ -366,19 +368,20 @@ class App extends React.Component {
 
 	// filter by category
 	filterByCategory = (el) => {
-		var filteredArray = [];
+		var filterCategory = [];
 		var selectedCategoryName = el.target.innerHTML;
 		this.state.products.map((e) => {
 			if (e.productCategory === selectedCategoryName) {
-				filteredArray.push(e);
+				filterCategory.push(e);
 			}
 		});
 		this.setState(
 			{
-				filtered: filteredArray,
+				filtered: filterCategory,
+				filterCategory: filterCategory,
 			},
 			() => {
-				this.updateMaxPrice(filteredArray);
+				this.updateMaxPrice(filterCategory);
 			}
 		);
 		// this.updateMaxPrice(filteredArray);
@@ -405,12 +408,53 @@ class App extends React.Component {
 		var priceRange = document.querySelector('.price-range b span');
 		priceRange.innerHTML = e.target.value;
 		var filterPrice = [];
+
+		// var priceArr = this.state.products.map((costs) => {
+		// 	return costs.price;
+		// });
+		// var max = Math.min(...priceArr);
+		// var maxx = parseInt(max);
 		// console.log(this.state.products);
-		this.state.products.forEach((arr) => {
-			if (arr.price <= e.target.value) {
-				filterPrice.push(arr);
-			}
-		});
+		// if (this.state.filtered.length < 1) {
+		// this.state.products.forEach((arr) => {
+		// 	if (arr.price <= e.target.value) {
+		// 		filterPrice.push(arr);
+		// 	}
+		// });
+		// this.setState({
+		// 	filtered: filterPrice,
+		// },
+		// );
+		// } else {
+		// 	this.state.filtered.forEach((arr) => {
+		// 		if (arr.price <= e.target.value) {
+		// 			filterPrice.push(arr);
+		// 		}
+		// 	});
+		// 	this.setState({
+		// 		filtered: filterPrice,
+		// 	});
+		// }
+		if (this.state.filterCategory.length < 1) {
+			this.state.products.forEach((arr) => {
+				if (arr.price <= e.target.value) {
+					filterPrice.push(arr);
+				}
+			});
+			this.setState({
+				filtered: filterPrice,
+			});
+		} else {
+			this.state.filterCategory.forEach((arr) => {
+				if (arr.price <= e.target.value) {
+					filterPrice.push(arr);
+				}
+			});
+			this.setState({
+				filtered: filterPrice,
+			});
+		}
+
 		// console.log(filterPrice.length);
 		// if (filterPrice.length == 0) {
 		// 	// remove all product cards
@@ -419,9 +463,6 @@ class App extends React.Component {
 		// 		element.style.display = 'none';
 		// 	});
 		// }
-		this.setState({
-			filtered: filterPrice,
-		});
 	};
 
 	// selecting sort by price type (ASC/DESC)
