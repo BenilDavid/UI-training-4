@@ -130,7 +130,6 @@ class App extends React.Component {
 
 	// add product open modal
 	addProductBtn = () => {
-		console.log('hello', this.state.filtered.length);
 
 		var modal = document.getElementById('myModal');
 		var body = document.getElementsByTagName('body')[0];
