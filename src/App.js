@@ -101,8 +101,8 @@ class App extends React.Component {
 					uploadedImageSrc: 'https://source.unsplash.com/70x70/?mug,mockup',
 				},
 			],
-			filtered: [],
-			filterCategory: [],
+			filtered: null,
+			filterCategory: null,
 			onclick: this.addProduct,
 			isEdit: false,
 		};
@@ -409,33 +409,7 @@ class App extends React.Component {
 		priceRange.innerHTML = e.target.value;
 		var filterPrice = [];
 
-		// var priceArr = this.state.products.map((costs) => {
-		// 	return costs.price;
-		// });
-		// var max = Math.min(...priceArr);
-		// var maxx = parseInt(max);
-		// console.log(this.state.products);
-		// if (this.state.filtered.length < 1) {
-		// this.state.products.forEach((arr) => {
-		// 	if (arr.price <= e.target.value) {
-		// 		filterPrice.push(arr);
-		// 	}
-		// });
-		// this.setState({
-		// 	filtered: filterPrice,
-		// },
-		// );
-		// } else {
-		// 	this.state.filtered.forEach((arr) => {
-		// 		if (arr.price <= e.target.value) {
-		// 			filterPrice.push(arr);
-		// 		}
-		// 	});
-		// 	this.setState({
-		// 		filtered: filterPrice,
-		// 	});
-		// }
-		if (this.state.filterCategory.length < 1) {
+		if (this.state.filterCategory == null) {
 			this.state.products.forEach((arr) => {
 				if (arr.price <= e.target.value) {
 					filterPrice.push(arr);
@@ -728,7 +702,7 @@ class App extends React.Component {
 								</select>
 							</div>
 							<div className="product-listing">
-								{this.state.filtered.length > 0
+								{this.state.filtered !== null
 									? this.state.filtered.map((e) => {
 											return (
 												<div
