@@ -90,6 +90,15 @@ class App extends React.Component {
 					sale: false,
 					uploadedImageSrc: 'https://source.unsplash.com/400x300/?Poster',
 				},
+				{
+					id: 10,
+					productCategory: 'Misc',
+					productTitle: 'Shoes',
+					price: 2000.0,
+					topProducts: false,
+					sale: false,
+					uploadedImageSrc: 'https://source.unsplash.com/400x300/?shoes',
+				},
 			],
 			topProduct: [
 				{
@@ -101,10 +110,14 @@ class App extends React.Component {
 					uploadedImageSrc: 'https://source.unsplash.com/70x70/?mug,mockup',
 				},
 			],
-			filtered: null,
+			filtered: [],
 			filterCategory: null,
 			onclick: this.addProduct,
 			isEdit: false,
+			paginationResponse: [],
+			pageNumber: [],
+			pageWiseProducts: [],
+			page_active_link: 1,
 		};
 	}
 	componentDidMount() {
@@ -126,11 +139,125 @@ class App extends React.Component {
 			// 	});
 			// }
 		});
+		let response = this.paginator(this.state.products, 1, 9);
+		this.setPageDatas(response);
 	}
+
+	// ----------------------------------------- PAGINATION ------------------------------------
+
+	paginator = (items, current_page, per_page_items) => {
+		let page = current_page || 1,
+			per_page = per_page_items || 10,
+			offset = (page - 1) * per_page,
+			paginatedItems = items.slice(offset).slice(0, per_page_items),
+			total_pages = Math.ceil(items.length / per_page);
+
+		return {
+			page: page,
+			per_page: per_page,
+			pre_page: page - 1 ? page - 1 : null,
+			next_page: total_pages > page ? page + 1 : null,
+			total: items.length,
+			total_pages: total_pages,
+			data: paginatedItems,
+		};
+	};
+
+	//set page product data as per the response
+	setPageDatas = (response) => {
+		this.setState(
+			{
+				paginationResponse: response,
+			},
+			() => {
+				console.log(
+					'this.state.paginationResponse',
+					this.state.paginationResponse
+				);
+				this.loadPageNumber(this.state.paginationResponse);
+				this.onLoadProductData(this.state.paginationResponse);
+			}
+		);
+	};
+
+	// Display Page Numbers Function
+	loadPageNumber = (response) => {
+		let dummy_array = [];
+
+		for (let i = 1; i <= response.total_pages; i++) {
+			dummy_array.push(i);
+		}
+		this.setState(
+			{
+				pageNumber: dummy_array,
+			},
+			() => {
+				console.log('this.state.page', this.state.pageNumber);
+			}
+		);
+	};
+
+	//load products data as per the response
+	onLoadProductData(response) {
+		let dummy_array = [];
+		// console.log(response)
+		for (let i = 0; i < response.data.length; i++) {
+			dummy_array.push(response.data[i]);
+		}
+
+		this.setState(
+			{
+				pageWiseProducts: dummy_array,
+			},
+			() => {
+				console.log('onload data', this.state.pageWiseProducts);
+			}
+		);
+	}
+
+	//when user click the page numb
+	pageNumbClick = (e) => {
+		console.log('----------------page clicked---------------');
+		e.preventDefault();
+		console.log(e.target.dataset.page);
+		let dummy_array = [];
+
+		let page_click_response;
+
+		// console.log(this.state.products);
+		if (this.state.filtered.length === 0) {
+			page_click_response = this.paginator(
+				this.state.products,
+				e.target.dataset.page,
+				9
+			);
+		} else {
+			page_click_response = this.paginator(
+				this.state.filtered,
+				e.target.dataset.page,
+				9
+			);
+		}
+
+		console.log(page_click_response);
+		for (let i = 0; i < page_click_response.data.length; i++) {
+			dummy_array.push(page_click_response.data[i]);
+		}
+
+		this.setState(
+			{
+				pageWiseProducts: dummy_array,
+				page_active_link: parseInt(e.target.dataset.page),
+			},
+			() => {
+				console.log(this.state.page_active_link);
+			}
+		);
+		console.log('----------------page clicked---------------');
+	};
 
 	// add product open modal
 	addProductBtn = () => {
-
 		var modal = document.getElementById('myModal');
 		var body = document.getElementsByTagName('body')[0];
 		var save = document.getElementById('save');
@@ -215,8 +342,6 @@ class App extends React.Component {
 
 	// save button when editting a product details
 	editProduct = () => {
-		console.log('state', this.state);
-
 		var e = document.getElementById('selectedCategory');
 		var title = document.getElementById('title').value;
 		var price = document.getElementById('price').value;
@@ -349,6 +474,8 @@ class App extends React.Component {
 					},
 					() => {
 						this.updateMaxPrice(this.state.products);
+						let response = this.paginator(this.state.products, 1, 9);
+						this.setPageDatas(response);
 					}
 				);
 			} else {
@@ -359,6 +486,8 @@ class App extends React.Component {
 					},
 					() => {
 						this.updateMaxPrice(this.state.products);
+						let response = this.paginator(this.state.products, 1, 9);
+						this.setPageDatas(response);
 					}
 				);
 			}
@@ -381,6 +510,8 @@ class App extends React.Component {
 			},
 			() => {
 				this.updateMaxPrice(filterCategory);
+				let response = this.paginator(this.state.filtered, 1, 9);
+				this.setPageDatas(response);
 			}
 		);
 		// this.updateMaxPrice(filteredArray);
@@ -414,28 +545,31 @@ class App extends React.Component {
 					filterPrice.push(arr);
 				}
 			});
-			this.setState({
-				filtered: filterPrice,
-			});
+			this.setState(
+				{
+					filtered: filterPrice,
+				},
+				() => {
+					let response = this.paginator(this.state.filtered, 1, 9);
+					this.setPageDatas(response);
+				}
+			);
 		} else {
 			this.state.filterCategory.forEach((arr) => {
 				if (arr.price <= e.target.value) {
 					filterPrice.push(arr);
 				}
 			});
-			this.setState({
-				filtered: filterPrice,
-			});
+			this.setState(
+				{
+					filtered: filterPrice,
+				},
+				() => {
+					let response = this.paginator(this.state.filtered, 1, 9);
+					this.setPageDatas(response);
+				}
+			);
 		}
-
-		// console.log(filterPrice.length);
-		// if (filterPrice.length == 0) {
-		// 	// remove all product cards
-		// 	var productcard = document.querySelectorAll('.product-card');
-		// 	productcard.forEach((element) => {
-		// 		element.style.display = 'none';
-		// 	});
-		// }
 	};
 
 	// selecting sort by price type (ASC/DESC)
@@ -452,60 +586,98 @@ class App extends React.Component {
 		}
 	};
 	// -------------------------- PRICE: DEFAULT SORTING ----------------------------
-	defaultSorting() {
+	defaultSorting = () => {
 		if (this.state.filtered.length < 1) {
 			const defaultSort = this.state.products.sort(function (a, b) {
 				return parseFloat(a.id) - parseFloat(b.id);
 			});
-			this.setState({
-				filtered: defaultSort,
-			});
+			this.setState(
+				{
+					filtered: defaultSort,
+				},
+				() => {
+					let response = this.paginator(this.state.filtered, 1, 9);
+					this.setPageDatas(response);
+				}
+			);
 		} else {
 			const defaultSort = this.state.filtered.sort(function (a, b) {
 				return parseFloat(a.id) - parseFloat(b.id);
 			});
-			this.setState({
-				filtered: defaultSort,
-			});
+			this.setState(
+				{
+					filtered: defaultSort,
+				},
+				() => {
+					let response = this.paginator(this.state.filtered, 1, 9);
+					this.setPageDatas(response);
+				}
+			);
 		}
-	}
+	};
 	// -------------------------- PRICE LOW TO HIGH ----------------------------
 	priceLowToHigh = () => {
 		if (this.state.filtered.length < 1) {
 			const lowToHigh = this.state.products.sort(function (a, b) {
 				return parseFloat(a.price) - parseFloat(b.price);
 			});
-			this.setState({
-				filtered: lowToHigh,
-			});
+			this.setState(
+				{
+					filtered: lowToHigh,
+				},
+				() => {
+					let response = this.paginator(this.state.filtered, 1, 9);
+					this.setPageDatas(response);
+				}
+			);
 		} else {
 			const lowToHigh = this.state.filtered.sort(function (a, b) {
 				return parseFloat(a.price) - parseFloat(b.price);
 			});
-			this.setState({
-				filtered: lowToHigh,
-			});
+			this.setState(
+				{
+					filtered: lowToHigh,
+				},
+				() => {
+					let response = this.paginator(this.state.filtered, 1, 9);
+					this.setPageDatas(response);
+				}
+			);
 		}
 	};
 	// -------------------------- PRICE HIGH TO LOW ----------------------------
-	priceHighToLow() {
+	priceHighToLow = () => {
 		if (this.state.filtered.length < 1) {
 			const highToLow = this.state.products.sort(function (a, b) {
 				return parseFloat(b.price) - parseFloat(a.price);
 			});
-			this.setState({
-				filtered: highToLow,
-			});
+			this.setState(
+				{
+					filtered: highToLow,
+				},
+				() => {
+					let response = this.paginator(this.state.filtered, 1, 9);
+					this.setPageDatas(response);
+				}
+			);
 		} else {
 			const highToLow = this.state.filtered.sort(function (a, b) {
 				return parseFloat(b.price) - parseFloat(a.price);
 			});
-			this.setState({
-				filtered: highToLow,
-			});
+			this.setState(
+				{
+					filtered: highToLow,
+				},
+				() => {
+					let response = this.paginator(this.state.filtered, 1, 9);
+					this.setPageDatas(response);
+				}
+			);
 		}
-	}
+	};
+
 	render() {
+		const { page_active_link, pageNumber } = this.state;
 		console.log('state after render', this.state);
 		return (
 			<>
@@ -701,7 +873,43 @@ class App extends React.Component {
 								</select>
 							</div>
 							<div className="product-listing">
-								{this.state.filtered !== null
+								{this.state.pageWiseProducts.map((e) => {
+									return (
+										<div
+											className="product-card"
+											id="cardBtn"
+											data-value={e.id}
+											onClick={(e) => this.productClicked(e)}
+										>
+											<div className="product-image" data-value={e.id}>
+												{e.sale === true ? (
+													<button className="product-sale" data-value={e.id}>
+														sale
+													</button>
+												) : (
+													''
+												)}
+												<img
+													src={e.uploadedImageSrc}
+													data-value={e.id}
+													alt=""
+												/>
+											</div>
+											<div class="product-details" data-value={e.id}>
+												<span id="productId" style={{ display: 'none' }}>
+													{e.id}
+												</span>
+												<div class="product-name" data-value={e.id}>
+													{e.productTitle}
+												</div>
+												<div class="product-price" data-value={e.id}>
+													${e.price}
+												</div>
+											</div>
+										</div>
+									);
+								})}
+								{/* {this.state.filtered.length !== 0
 									? this.state.filtered.map((e) => {
 											return (
 												<div
@@ -779,9 +987,24 @@ class App extends React.Component {
 													</div>
 												</div>
 											);
-									  })}
+									  })} */}
 							</div>
-							<div className="pagination"></div>
+							<ul className="pagination">
+								{pageNumber.map((item, key) => {
+									return (
+										<>
+											<li
+												className="page"
+												id={key}
+												data-page={item}
+												onClick={this.pageNumbClick}
+											>
+												{item}
+											</li>
+										</>
+									);
+								})}
+							</ul>
 						</div>
 					</div>
 				</main>
