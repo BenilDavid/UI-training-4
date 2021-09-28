@@ -90,15 +90,15 @@ class App extends React.Component {
 					sale: false,
 					uploadedImageSrc: 'https://source.unsplash.com/400x300/?Poster',
 				},
-				{
-					id: 10,
-					productCategory: 'Misc',
-					productTitle: 'Shoes',
-					price: 2000.0,
-					topProducts: false,
-					sale: false,
-					uploadedImageSrc: 'https://source.unsplash.com/400x300/?shoes',
-				},
+				// {
+				// 	id: 10,
+				// 	productCategory: 'Misc',
+				// 	productTitle: 'Shoes',
+				// 	price: 2000.0,
+				// 	topProducts: false,
+				// 	sale: false,
+				// 	uploadedImageSrc: 'https://source.unsplash.com/400x300/?shoes',
+				// },
 			],
 			topProduct: [
 				{
@@ -471,6 +471,7 @@ class App extends React.Component {
 					{
 						products: this.state.products,
 						topProduct: this.state.topProduct,
+						filtered: [],
 					},
 					() => {
 						this.updateMaxPrice(this.state.products);
@@ -483,6 +484,7 @@ class App extends React.Component {
 				this.setState(
 					{
 						products: this.state.products,
+						filtered: [],
 					},
 					() => {
 						this.updateMaxPrice(this.state.products);
